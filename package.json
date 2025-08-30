@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/cnallis/b2b-datatest/issues"
   },
-  "homepage": "https://github.com/cnallis/b2b-datatest#readme"
+  "homepage": "https://github.com/cnallis/b2b-datatest#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.56.1"
+  }
 }
