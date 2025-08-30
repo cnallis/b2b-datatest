@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sistema de Registro de Parceiros</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+
+        <header class="p-3 text-bg-dark">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center">
+                    <h1 class="fs-4">Sistema de Registro de Parceiros</h1>
+                </div>
+            </div>
+        </header>
+         <!-- Essa classe (exemplo)"mb-0" é indicação do Bootstrap, para margin-bottom: 0. Na verdade, a maioria dessas classes estão aqui por indicação do Bootstrap.-->
+        <main class="container mt-4">
+            <section class="mb-5">
+                <h2>Cadastro de Parceiros</h2>
+                       <!-- O id, também segue como link do javascript, para com css e Bootstrap.-->      
+                <form id="register-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome Completo *</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="telefone" class="form-label">Telefone *</label>
+                        <input type="text" class="form-control" id="telefone" name="telefone" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="endereco" class="form-label">Endereço *</label>
+                        <input type="text" class="form-control" id="endereco" name="endereco" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="cnpj" class="form-label">CNPJ *</label>
+                        <input type="text" class="form-control" id="cnpj" name="cnpj" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="imagem" class="form-label">Foto do Parceiro *</label>
+                        <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Adicionar Parceiro</button>
+                </form>
+            </section>
+
+            <section>
+                <h2>Lista de Parceiros</h2>
+                <div class="table-responsive">
+                 <!--Essa classe table-responsive é dada pelo Bootstrap como útil para telas menores-->
+                 <!--table, segue como estilo base; table-striped como efeito zebrado na tabela; table-hover dá um tchum no correr do mouse-->
+                    <table class="table table-striped table-hover" id="partners-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">CNPJ</th>
+                                <th scope="col">Foto</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td colspan="6" class="text-center">Nenhum parceiro cadastrado ainda.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
