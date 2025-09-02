@@ -59,11 +59,15 @@
             </section>
 
             <section>
-                <h2>Lista de Parceiros</h2>
-                <div class="table-responsive">
-                 <!--Essa classe table-responsive é dada pelo Bootstrap como útil para telas menores-->
-                 <!--table, segue como estilo base; table-striped como efeito zebrado na tabela; table-hover dá um tchum no correr do mouse-->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Lista de Parceiros</h2>
+                    <input type="text" id="search-input" class="form-control w-25" placeholder="Buscar parceiro...">
+                </div>
+  
+                <div class="table-responsive mt-3">
                     <table class="table table-striped table-hover" id="partners-table">
+                        <!--Essa classe table-responsive é dada pelo Bootstrap como útil para telas menores-->
+                        <!--table, segue como estilo base; table-striped como efeito zebrado na tabela; table-hover dá um tchum no correr do mouse-->
                         <thead class="table-dark">
                             <tr>
                                 <th scope="col">ID</th>

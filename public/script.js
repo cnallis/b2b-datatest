@@ -152,3 +152,22 @@ form.addEventListener('submit', async (event) => {
 
 // Executa a função para carregar os parceiros assim que a página abre
 loadPartners();
+
+// --- LÓGICA DO FILTRO DE PESQUISA (Essa foi braba!) ---
+const searchInput = document.querySelector('#search-input');
+
+searchInput.addEventListener('keyup', () => {
+  const searchTerm = searchInput.value.toLowerCase(); // Pega o termo de busca em minúsculas
+  const rows = tableBody.querySelectorAll('tr'); // Pega todas as linhas da tabela
+
+  rows.forEach(row => {
+    const rowText = row.textContent.toLowerCase(); // Pega todo o texto da linha em minúsculas
+    
+    // Se o texto da linha incluir o termo de busca, mostra a linha. Se não, esconde.
+    if (rowText.includes(searchTerm)) {
+      row.style.display = ''; // '' reseta para o padrão (visível)
+    } else {
+      row.style.display = 'none'; // 'none' esconde o elemento
+    }
+  });
+});
