@@ -53,8 +53,8 @@ async function loadPartners() {
       <td>${p.cnpj}</td>
       <td><img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50"></td>
       <td>
-        <button class="btn btn-sm btn-info edit-btn">Editar</button>
-        <button class="btn btn-sm btn-danger delete-btn">Excluir</button>
+        <button class="btn btn-sm btn-info edit-btn" aria-label="Editar ${p.nome}">Editar</button>
+        <button class="btn btn-sm btn-danger delete-btn" aria-label="Excluir ${p.nome}">Excluir</button>
       </td>
     `;
 
