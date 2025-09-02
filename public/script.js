@@ -1,68 +1,44 @@
-// Importa a função para criar o "cliente" Supabase
+// Importa a função para criar, alterar e excluir o "cliente" Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// Configuração das chaves de acesso (travei legal nisso aqui)
 const SUPABASE_URL = 'https://qgtckutlnqlokjuxbucm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFndGNrdXRsbnFsb2tqdXhidWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1MzMxMjIsImV4cCI6MjA3MjEwOTEyMn0.5vafk75_5DiDR_w4ORLF3zkWEqApyIa5zdZsP4NNYb0';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Seleciona os elementos do nosso HTML
 const tableBody = document.querySelector('#partners-table tbody');
 const form = document.querySelector('#register-form');
+const editForm = document.querySelector('#edit-form');
+const editModal = new bootstrap.Modal(document.getElementById('editPartnerModal'));
 
-// Habilita a opção de excluir os já cadastrados
 async function deletePartner(id, imagemUrl) {
-  // 1. Deletar a imagem do Storage
-  // Extrai o nome do arquivo a partir da URL completa
   const imageName = imagemUrl.split('/').pop();
-  
-  const { error: deleteImageError } = await supabase.storage
-    .from('parceiros') // Nome do bucket
-    .remove([imageName]); // O nome do arquivo a ser removido
-
+  const { error: deleteImageError } = await supabase.storage.from('parceiros').remove([imageName]);
   if (deleteImageError) {
-    alert('Erro ao deletar a imagem. Tente novamente.');
+    alert('Erro ao deletar a imagem.');
     console.error('Erro ao deletar imagem:', deleteImageError);
     return;
   }
   
-  // 2. Deletar o registro do parceiro do banco de dados
-  const { error: deletePartnerError } = await supabase
-    .from('parceiros')
-    .delete()
-    .eq('id', id); // Especifica que queremos deletar a linha ONDE o 'id' é igual ao id que recebemos
-
+  const { error: deletePartnerError } = await supabase.from('parceiros').delete().eq('id', id);
   if (deletePartnerError) {
     alert('Erro ao deletar o parceiro.');
     console.error('Erro ao deletar parceiro:', deletePartnerError);
     return;
   }
   
-  // 3. Recarrega a lista de parceiros para atualizar a tela
   alert('Parceiro deletado com sucesso!');
   loadPartners();
 }
-// Fim da função exclusão ^^
 
 async function loadPartners() {
-  const { data, error } = await supabase
-    .from('parceiros')
-    .select('*')
-    .order('id', { ascending: false });
-
+  const { data, error } = await supabase.from('parceiros').select('*').order('id', { ascending: false });
   if (error) {
     console.error('Erro ao carregar parceiros:', error);
     return;
   }
 
   tableBody.innerHTML = '';
-
   if (data.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="text-center">Nenhum parceiro cadastrado ainda.</td>
-      </tr>
-    `;
+    tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Nenhum parceiro cadastrado ainda.</td></tr>`;
     return;
   }
 
@@ -75,14 +51,29 @@ async function loadPartners() {
       <td>${p.telefone}</td>
       <td>${p.endereco}</td>
       <td>${p.cnpj}</td>
+      <td><img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50"></td>
       <td>
-        <img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50">
-      </td>
-      <td>
-        <button class="btn btn-sm btn-danger delete-btn" data-id="${p.id}" data-imagem-url="${p.imagem_url}">Excluir</button>
+        <button class="btn btn-sm btn-info edit-btn">Editar</button>
+        <button class="btn btn-sm btn-danger delete-btn">Excluir</button>
       </td>
     `;
-    // Adiciona o evento de clique para o botão de excluir da linha atual
+
+    // ----> LÓGICA DO BOTÃO EDITAR <----
+    const editButton = row.querySelector('.edit-btn');
+    editButton.addEventListener('click', () => {
+      // Preenche os campos do modal com os dados do parceiro (p)
+      document.getElementById('edit-id').value = p.id;
+      document.getElementById('edit-nome').value = p.nome;
+      document.getElementById('edit-email').value = p.email;
+      document.getElementById('edit-telefone').value = p.telefone;
+      document.getElementById('edit-endereco').value = p.endereco;
+      document.getElementById('edit-cnpj').value = p.cnpj;
+
+      // Abre o modal
+      editModal.show();
+    });
+
+    // ----> LÓGICA DO BOTÃO EXCLUIR <----
     const deleteButton = row.querySelector('.delete-btn');
     deleteButton.addEventListener('click', () => {
       if (confirm('Tem certeza que deseja excluir este parceiro?')) {
@@ -94,80 +85,86 @@ async function loadPartners() {
   });
 }
 
-// ----> INÍCIO DO NOVO CÓDIGO, MAIS ROBUSTO. (usei IA aqui pra completar muito do que não sei) <----
-form.addEventListener('submit', async (event) => {
-  // 1. Isso impede o comportamento padrão do formulário (que é recarregar a página)
+// ----> LÓGICA PARA SALVAR O FORMULÁRIO DE EDIÇÃO <----
+editForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  // 2. Pega os dados do formulário
-  const nome = form.nome.value;
-  const email = form.email.value;
-  const telefone = form.telefone.value;
-  const endereco = form.endereco.value;
-  const cnpj = form.cnpj.value;
-  const imagemFile = form.imagem.files[0];
+  const idToUpdate = document.getElementById('edit-id').value;
+  const updatedData = {
+    nome: document.getElementById('edit-nome').value,
+    email: document.getElementById('edit-email').value,
+    telefone: document.getElementById('edit-telefone').value,
+    endereco: document.getElementById('edit-endereco').value,
+    cnpj: document.getElementById('edit-cnpj').value,
+  };
 
-  // 3. Faz o upload da imagem para o Supabase Storage
-  const fileName = `${Date.now()}-${imagemFile.name}`;
-  const { error: uploadError } = await supabase.storage
-    .from('parceiros') // O nome do nosso bucket, balde que vai segurar o arquivo. Lembrando, que ele vai ser citado como texto na tabela.
-    .upload(fileName, imagemFile);
-
-  if (uploadError) {
-    alert('Erro ao enviar a imagem. Tente novamente.');
-    console.error('Erro de upload:', uploadError);
+  const { error } = await supabase
+    .from('parceiros')
+    .update(updatedData)
+    .eq('id', idToUpdate);
+  
+  if (error) {
+    alert('Erro ao atualizar o parceiro.');
+    console.error('Erro de atualização:', error);
     return;
   }
 
-  // 4. Pega a URL pública da imagem que acabamos de enviar, lá no balde.
-  const { data: urlData } = supabase.storage
-    .from('parceiros')
-    .getPublicUrl(fileName);
-  
-  const publicURL = urlData.publicUrl;
-
-  // 5. Insere os dados do parceiro (incluindo a URL da imagem) no banco de dados
-  const { error: insertError } = await supabase
-    .from('parceiros')
-    .insert([{
-      nome: nome,
-      email: email,
-      telefone: telefone,
-      endereco: endereco,
-      cnpj: cnpj,
-      imagem_url: publicURL
-    }]);
-
-  if (insertError) {
-    alert('Erro ao cadastrar parceiro. Verifique os dados.');
-    console.error('Erro de inserção:', insertError);
-    return;
-  }
-  
-  // 6. Dá um feedback para o usuário, limpa o formulário e recarrega a tabela
-  alert('Parceiro cadastrado com sucesso!');
-  form.reset();
-  loadPartners();
+  alert('Parceiro atualizado com sucesso!');
+  editModal.hide(); // Esconde o modal
+  loadPartners(); // Recarrega a tabela
 });
 
-// Executa a função para carregar os parceiros assim que a página abre
-loadPartners();
+// Lógica do formulário de cadastro (continua igual)
+form.addEventListener('submit', async (event) => {
+    // ... (todo o código do formulário de cadastro que já tínhamos)
+    event.preventDefault();
 
-// --- LÓGICA DO FILTRO DE PESQUISA (Essa foi braba!) ---
-const searchInput = document.querySelector('#search-input');
+    const nome = form.nome.value;
+    const email = form.email.value;
+    const telefone = form.telefone.value;
+    const endereco = form.endereco.value;
+    const cnpj = form.cnpj.value;
+    const imagemFile = form.imagem.files[0];
 
-searchInput.addEventListener('keyup', () => {
-  const searchTerm = searchInput.value.toLowerCase(); // Pega o termo de busca em minúsculas
-  const rows = tableBody.querySelectorAll('tr'); // Pega todas as linhas da tabela
-
-  rows.forEach(row => {
-    const rowText = row.textContent.toLowerCase(); // Pega todo o texto da linha em minúsculas
-    
-    // Se o texto da linha incluir o termo de busca, mostra a linha. Se não, esconde.
-    if (rowText.includes(searchTerm)) {
-      row.style.display = ''; // '' reseta para o padrão (visível)
-    } else {
-      row.style.display = 'none'; // 'none' esconde o elemento
+    const fileName = `${Date.now()}-${imagemFile.name}`;
+    const { error: uploadError } = await supabase.storage.from('parceiros').upload(fileName, imagemFile);
+    if (uploadError) {
+        alert('Erro ao enviar a imagem.');
+        console.error('Erro de upload:', uploadError);
+        return;
     }
-  });
+
+    const { data: urlData } = supabase.storage.from('parceiros').getPublicUrl(fileName);
+    const publicURL = urlData.publicUrl;
+
+    const { error: insertError } = await supabase.from('parceiros').insert([{ nome, email, telefone, endereco, cnpj, imagem_url: publicURL }]);
+    if (insertError) {
+        alert('Erro ao cadastrar parceiro.');
+        console.error('Erro de inserção:', insertError);
+        return;
+    }
+    
+    alert('Parceiro cadastrado com sucesso!');
+    form.reset();
+    loadPartners();
 });
+
+
+// Filtro de pesquisa (continua igual)
+const searchInput = document.querySelector('#search-input');
+searchInput.addEventListener('keyup', () => {
+    // ... (todo o código do filtro que já tínhamos)
+    const searchTerm = searchInput.value.toLowerCase();
+    const rows = tableBody.querySelectorAll('tr');
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        if (rowText.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Carrega os dados iniciais
+loadPartners();

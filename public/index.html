@@ -94,5 +94,47 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
         <script type="module" src="script.js"></script>
+
+        <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="editPartnerModalLabel">Editar Parceiro</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-form">
+                            <input type="hidden" id="edit-id">
+
+                            <div class="mb-3">
+                                <label for="edit-nome" class="form-label">Nome Completo *</label>
+                                <input type="text" class="form-control" id="edit-nome" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="edit-email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-telefone" class="form-label">Telefone *</label>
+                                <input type="text" class="form-control" id="edit-telefone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-endereco" class="form-label">Endereço *</label>
+                                <input type="text" class="form-control" id="edit-endereco" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-cnpj" class="form-label">CNPJ *</label>
+                                <input type="text" class="form-control" id="edit-cnpj" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="edit-form" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>
