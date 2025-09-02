@@ -10,6 +10,40 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const tableBody = document.querySelector('#partners-table tbody');
 const form = document.querySelector('#register-form');
 
+// Habilita a opção de excluir os já cadastrados
+async function deletePartner(id, imagemUrl) {
+  // 1. Deletar a imagem do Storage
+  // Extrai o nome do arquivo a partir da URL completa
+  const imageName = imagemUrl.split('/').pop();
+  
+  const { error: deleteImageError } = await supabase.storage
+    .from('parceiros') // Nome do bucket
+    .remove([imageName]); // O nome do arquivo a ser removido
+
+  if (deleteImageError) {
+    alert('Erro ao deletar a imagem. Tente novamente.');
+    console.error('Erro ao deletar imagem:', deleteImageError);
+    return;
+  }
+  
+  // 2. Deletar o registro do parceiro do banco de dados
+  const { error: deletePartnerError } = await supabase
+    .from('parceiros')
+    .delete()
+    .eq('id', id); // Especifica que queremos deletar a linha ONDE o 'id' é igual ao id que recebemos
+
+  if (deletePartnerError) {
+    alert('Erro ao deletar o parceiro.');
+    console.error('Erro ao deletar parceiro:', deletePartnerError);
+    return;
+  }
+  
+  // 3. Recarrega a lista de parceiros para atualizar a tela
+  alert('Parceiro deletado com sucesso!');
+  loadPartners();
+}
+// Fim da função exclusão ^^
+
 async function loadPartners() {
   const { data, error } = await supabase
     .from('parceiros')
@@ -38,14 +72,24 @@ async function loadPartners() {
       <td>${p.id}</td>
       <td>${p.nome}</td>
       <td>${p.email}</td>
+      <td>${p.telefone}</td>
+      <td>${p.endereco}</td>
       <td>${p.cnpj}</td>
       <td>
         <img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50">
       </td>
       <td>
-        <button class="btn btn-sm btn-danger">Excluir</button>
+        <button class="btn btn-sm btn-danger delete-btn" data-id="${p.id}" data-imagem-url="${p.imagem_url}">Excluir</button>
       </td>
     `;
+    // Adiciona o evento de clique para o botão de excluir da linha atual
+    const deleteButton = row.querySelector('.delete-btn');
+    deleteButton.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja excluir este parceiro?')) {
+        deletePartner(p.id, p.imagem_url);
+      }
+    });
+
     tableBody.appendChild(row);
   });
 }
