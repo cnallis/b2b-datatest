@@ -166,5 +166,48 @@ searchInput.addEventListener('keyup', () => {
     });
 });
 
+// *- LÓGICA DA API DE CONSULTA DE CNPJ -* 
+const consultarCnpjBtn = document.querySelector('#consultar-cnpj-btn');
+const cnpjInput = document.querySelector('#cnpj');
+
+consultarCnpjBtn.addEventListener('click', async () => {
+  const cnpj = cnpjInput.value.replace(/\D/g, ''); // Remove tudo que não for número, ponto e o escambau
+
+  if (cnpj.length !== 14) {
+    alert('Por favor, digite um CNPJ válido com 14 números.');
+    return;
+  }
+
+  // Feedback visual para o usuário
+  consultarCnpjBtn.disabled = true;
+  consultarCnpjBtn.textContent = 'Consultando...';
+
+  try {
+    const response = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+    
+    if (!response.ok) {
+      throw new Error('CNPJ não encontrado ou inválido.');
+    }
+
+    const data = await response.json();
+
+    // Preenche o formulário com os dados da API
+    form.nome.value = data.razao_social || '';
+    form.telefone.value = data.ddd_telefone_1 || '';
+    
+    // Constrói um endereço mais completo
+    const enderecoCompleto = `${data.logradouro}, ${data.numero} - ${data.bairro}, ${data.municipio} - ${data.uf}, CEP: ${data.cep}`;
+    form.endereco.value = enderecoCompleto;
+
+  } catch (error) {
+    alert(`Erro ao consultar CNPJ: ${error.message}`);
+    console.error('Erro na API de CNPJ:', error);
+  } finally {
+    // Reativa o botão, independente do resultado
+    consultarCnpjBtn.disabled = false;
+    consultarCnpjBtn.textContent = 'Consultar';
+  }
+});
+
 // Carrega os dados iniciais
 loadPartners();
