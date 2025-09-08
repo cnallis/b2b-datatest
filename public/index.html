@@ -21,6 +21,7 @@
          <!-- Essa classe (exemplo)"mb-0" é indicação do Bootstrap, para margin-bottom: 0. Na verdade, a maioria dessas classes estão aqui por indicação do Bootstrap.-->
         <main class="container mt-4">
             <section class="mb-5">
+<!-- AQUI COMEÇA O CADASTRO DOS ASSOCIADOS-->                
                 <h2>Cadastro de Parceiros</h2>
                        <!-- O id, também segue como link do javascript, para com css e Bootstrap.-->      
                 <form id="register-form" enctype="multipart/form-data">
@@ -30,7 +31,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email *</label>
+                        <label for="email" class="form-label">E-mail *</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
 
@@ -60,6 +61,10 @@
                         <label for="imagem" class="form-label">Foto do Parceiro *</label>
                         <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="drive_url" class="form-label">Link da Pasta no Drive</label>
+                        <input type="url" class="form-control" id="drive_url" name="drive_url" placeholder="https://...">
+                    </div>
 
                     <button type="submit" class="btn btn-primary w-100">Adicionar Parceiro</button>
                 </form>
@@ -84,13 +89,14 @@
                                 <th scope="col">Endereço</th>
                                 <th scope="col">CNPJ</th>
                                 <th scope="col">Foto</th>
+                                <th scope="col">Documentos</th>
                                 <th scope="col">Ações</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                            <td colspan="6" class="text-center">Nenhum parceiro cadastrado ainda.</td>
+                            <td colspan="9" class="text-center">Nenhum parceiro cadastrado ainda.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -101,7 +107,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
         <script type="module" src="script.js"></script>
-
+<!-- Aqui abaixo consta o anexo para edição dos dados já cadastrados-->
         <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -118,7 +124,7 @@
                                 <input type="text" class="form-control" id="edit-nome" required>
                             </div>
                             <div class="mb-3">
-                                <label for="edit-email" class="form-label">Email *</label>
+                                <label for="edit-email" class="form-label">E-mail *</label>
                                 <input type="email" class="form-control" id="edit-email" required>
                             </div>
                             <div class="mb-3">
@@ -132,6 +138,10 @@
                             <div class="mb-3">
                                 <label for="edit-cnpj" class="form-label">CNPJ *</label>
                                 <input type="text" class="form-control" id="edit-cnpj" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-drive_url" class="form-label">Link da Pasta no Drive</label>
+                                <input type="url" class="form-control" id="edit-drive_url" placeholder="https://...">
                             </div>
                         </form>
                     </div>

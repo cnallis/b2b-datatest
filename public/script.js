@@ -38,7 +38,7 @@ async function loadPartners() {
 
   tableBody.innerHTML = '';
   if (data.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Nenhum parceiro cadastrado ainda.</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="9" class="text-center">Nenhum parceiro cadastrado ainda.</td></tr>`;
     return;
   }
 
@@ -52,6 +52,7 @@ async function loadPartners() {
       <td>${p.endereco}</td>
       <td>${p.cnpj}</td>
       <td><img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50"></td>
+      <td><a href="${p.drive_url}" target="_blank" class="btn btn-sm btn-success ${!p.drive_url ? 'disabled' : ''}"> Documentos </a></td>
       <td>
         <button class="btn btn-sm btn-info edit-btn" aria-label="Editar ${p.nome}">Editar</button>
         <button class="btn btn-sm btn-danger delete-btn" aria-label="Excluir ${p.nome}">Excluir</button>
@@ -68,6 +69,7 @@ async function loadPartners() {
       document.getElementById('edit-telefone').value = p.telefone;
       document.getElementById('edit-endereco').value = p.endereco;
       document.getElementById('edit-cnpj').value = p.cnpj;
+      document.getElementById('edit-drive_url').value = p.drive_url || '';
 
       // Abre o modal
       editModal.show();
@@ -96,6 +98,7 @@ editForm.addEventListener('submit', async (event) => {
     telefone: document.getElementById('edit-telefone').value,
     endereco: document.getElementById('edit-endereco').value,
     cnpj: document.getElementById('edit-cnpj').value,
+    drive_url: document.getElementById('edit-drive_url').value,
   };
 
   const { error } = await supabase
@@ -125,6 +128,7 @@ form.addEventListener('submit', async (event) => {
     const endereco = form.endereco.value;
     const cnpj = form.cnpj.value;
     const imagemFile = form.imagem.files[0];
+    const drive_url = form.drive_url.value;
 
     const fileName = `${Date.now()}-${imagemFile.name}`;
     const { error: uploadError } = await supabase.storage.from('parceiros').upload(fileName, imagemFile);
@@ -137,7 +141,7 @@ form.addEventListener('submit', async (event) => {
     const { data: urlData } = supabase.storage.from('parceiros').getPublicUrl(fileName);
     const publicURL = urlData.publicUrl;
 
-    const { error: insertError } = await supabase.from('parceiros').insert([{ nome, email, telefone, endereco, cnpj, imagem_url: publicURL }]);
+    const { error: insertError } = await supabase.from('parceiros').insert([{ nome, email, telefone, endereco, cnpj, imagem_url: publicURL, drive_url: drive_url }]);
     if (insertError) {
         alert('Erro ao cadastrar parceiro.');
         console.error('Erro de inserção:', insertError);
