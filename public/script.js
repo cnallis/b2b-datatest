@@ -215,3 +215,17 @@ consultarCnpjBtn.addEventListener('click', async () => {
 
 // Carrega os dados iniciais
 loadPartners();
+
+// --- LÓGICA DO BOTÃO "VOLTAR AO TOPO" ---
+const backToTopButton = document.querySelector('#back-to-top');
+
+backToTopButton.addEventListener('click', (event) => {
+  // Impede o "salto" padrão do link #
+  event.preventDefault(); 
+  
+  // Rola a janela suavemente para o topo (posição 0)
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
