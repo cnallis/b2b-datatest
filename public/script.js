@@ -60,22 +60,22 @@ async function loadPartners() {
       </td>
     `;
 
-    // ----> LÓGICA DO BOTÃO EDITAR <----
-    const editButton = row.querySelector('.edit-btn');
-    editButton.addEventListener('click', () => {
-      // Preenche os campos do modal com os dados do parceiro (p)
-      document.getElementById('edit-id').value = p.id;
-      document.getElementById('edit-nome').value = p.nome;
-      document.getElementById('edit-email').value = p.email;
-      document.getElementById('edit-telefone').value = p.telefone;
-      document.getElementById('edit-endereco').value = p.endereco;
-      document.getElementById('edit-cnpj').value = p.cnpj;
-      document.getElementById('edit_inscricao_estadual').value = partner.inscricao_estadual || '';
-      document.getElementById('edit-drive_url').value = p.drive_url || '';
+    // ----> LÓGICA DO BOTÃO EDITAR <---- (VERSÃO CORRIGIDA)
+const editButton = row.querySelector('.edit-btn');
+editButton.addEventListener('click', () => {
+  // Preenche os campos do modal com os dados do parceiro (p)
+  document.getElementById('edit-id').value = p.id;
+  document.getElementById('edit-nome').value = p.nome;
+  document.getElementById('edit-email').value = p.email;
+  document.getElementById('edit-telefone').value = p.telefone;
+  document.getElementById('edit-endereco').value = p.endereco;
+  document.getElementById('edit-cnpj').value = p.cnpj;
+  document.getElementById('edit_inscricao_estadual').value = p.inscricao_estadual || ''; // Corrigido para "p"
+  document.getElementById('edit_drive_url').value = p.drive_url || '';          // Agora funciona com o HTML corrigido
 
-      // Abre o modal
-      editModal.show();
-    });
+  // Abre o modal
+  editModal.show();
+});
 
     // ----> LÓGICA DO BOTÃO EXCLUIR <----
     const deleteButton = row.querySelector('.delete-btn');
