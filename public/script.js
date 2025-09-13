@@ -101,7 +101,7 @@ editForm.addEventListener('submit', async (event) => {
     endereco: document.getElementById('edit-endereco').value,
     cnpj: document.getElementById('edit-cnpj').value,
     inscricao_estadual: document.getElementById('edit_inscricao_estadual').value,
-    drive_url: document.getElementById('edit-drive_url').value,
+    drive_url: document.getElementById('edit_drive_url').value, // Corrigido para underline
   };
 
   const { error } = await supabase
