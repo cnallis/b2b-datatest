@@ -38,7 +38,7 @@ async function loadPartners() {
 
   tableBody.innerHTML = '';
   if (data.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="9" class="text-center">Nenhum parceiro cadastrado ainda.</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="10" class="text-center">Nenhum parceiro cadastrado ainda.</td></tr>`;
     return;
   }
 
@@ -51,6 +51,7 @@ async function loadPartners() {
       <td>${p.telefone}</td>
       <td>${p.endereco}</td>
       <td>${p.cnpj}</td>
+      <td>${p.inscricao_estadual || 'N/A'}</td>
       <td><img src="${p.imagem_url || 'placeholder.png'}" alt="Foto do parceiro" height="50"></td>
       <td><a href="${p.drive_url}" target="_blank" class="btn btn-sm btn-success ${!p.drive_url ? 'disabled' : ''}"> Documentos </a></td>
       <td>
@@ -69,6 +70,7 @@ async function loadPartners() {
       document.getElementById('edit-telefone').value = p.telefone;
       document.getElementById('edit-endereco').value = p.endereco;
       document.getElementById('edit-cnpj').value = p.cnpj;
+      document.getElementById('edit_inscricao_estadual').value = partner.inscricao_estadual || '';
       document.getElementById('edit-drive_url').value = p.drive_url || '';
 
       // Abre o modal
@@ -98,6 +100,7 @@ editForm.addEventListener('submit', async (event) => {
     telefone: document.getElementById('edit-telefone').value,
     endereco: document.getElementById('edit-endereco').value,
     cnpj: document.getElementById('edit-cnpj').value,
+    inscricao_estadual: document.getElementById('edit_inscricao_estadual').value,
     drive_url: document.getElementById('edit-drive_url').value,
   };
 
@@ -141,7 +144,7 @@ form.addEventListener('submit', async (event) => {
     const { data: urlData } = supabase.storage.from('parceiros').getPublicUrl(fileName);
     const publicURL = urlData.publicUrl;
 
-    const { error: insertError } = await supabase.from('parceiros').insert([{ nome, email, telefone, endereco, cnpj, imagem_url: publicURL, drive_url: drive_url }]);
+    const { error: insertError } = await supabase.from('parceiros').insert([{ nome, email, telefone, endereco, cnpj, inscricao_estadual: form.inscricao_estadual.value,imagem_url: publicURL, drive_url: drive_url }]);
     if (insertError) {
         alert('Erro ao cadastrar parceiro.');
         console.error('Erro de inserção:', insertError);
@@ -202,6 +205,9 @@ consultarCnpjBtn.addEventListener('click', async () => {
     // Constrói um endereço mais completo
     const enderecoCompleto = `${data.logradouro}, ${data.numero} - ${data.bairro}, ${data.municipio} - ${data.uf}, CEP: ${data.cep}`;
     form.endereco.value = enderecoCompleto;
+
+    // Adiciona o resultante da inscrição estadual
+    form.inscricao_estadual.value = data.inscricao_estadual || '';
 
   } catch (error) {
     alert(`Erro ao consultar CNPJ: ${error.message}`);
