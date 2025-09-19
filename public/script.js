@@ -1,4 +1,4 @@
-// Importa a função para criar, alterar e excluir o "cliente" Supabase
+// Importa a função para criar, alterar e excluir o "cliente" lá do SUPABASE
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 const SUPABASE_URL = 'https://qgtckutlnqlokjuxbucm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFndGNrdXRsbnFsb2tqdXhidWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1MzMxMjIsImV4cCI6MjA3MjEwOTEyMn0.5vafk75_5DiDR_w4ORLF3zkWEqApyIa5zdZsP4NNYb0';
@@ -60,7 +60,7 @@ async function loadPartners() {
       </td>
     `;
 
-    // ----> LÓGICA DO BOTÃO EDITAR <---- (VERSÃO CORRIGIDA)
+// LÓGICA DO BOTÃO EDITAR
 const editButton = row.querySelector('.edit-btn');
 editButton.addEventListener('click', () => {
   // Preenche os campos do modal com os dados do parceiro (p)
@@ -77,7 +77,7 @@ editButton.addEventListener('click', () => {
   editModal.show();
 });
 
-    // ----> LÓGICA DO BOTÃO EXCLUIR <----
+// LÓGICA DO BOTÃO EXCLUIR
     const deleteButton = row.querySelector('.delete-btn');
     deleteButton.addEventListener('click', () => {
       if (confirm('Tem certeza que deseja excluir este parceiro?')) {
@@ -89,7 +89,7 @@ editButton.addEventListener('click', () => {
   });
 }
 
-// ----> LÓGICA PARA SALVAR O FORMULÁRIO DE EDIÇÃO <----
+// LÓGICA PARA SALVAR O FORMULÁRIO DE EDIÇÃO NO MODAL
 editForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
@@ -101,7 +101,7 @@ editForm.addEventListener('submit', async (event) => {
     endereco: document.getElementById('edit-endereco').value,
     cnpj: document.getElementById('edit-cnpj').value,
     inscricao_estadual: document.getElementById('edit_inscricao_estadual').value,
-    drive_url: document.getElementById('edit_drive_url').value, // Corrigido para underline
+    drive_url: document.getElementById('edit_drive_url').value,
   };
 
   const { error } = await supabase
@@ -120,9 +120,8 @@ editForm.addEventListener('submit', async (event) => {
   loadPartners(); // Recarrega a tabela
 });
 
-// Lógica do formulário de cadastro (continua igual)
+// LÓGICA DO FORMULÁRIO DE CADASTRO 
 form.addEventListener('submit', async (event) => {
-    // ... (todo o código do formulário de cadastro que já tínhamos)
     event.preventDefault();
 
     const nome = form.nome.value;
@@ -157,10 +156,9 @@ form.addEventListener('submit', async (event) => {
 });
 
 
-// Filtro de pesquisa (continua igual)
+// LÓGICA DO FILTRO DE PESQUISA
 const searchInput = document.querySelector('#search-input');
 searchInput.addEventListener('keyup', () => {
-    // ... (todo o código do filtro que já tínhamos)
     const searchTerm = searchInput.value.toLowerCase();
     const rows = tableBody.querySelectorAll('tr');
     rows.forEach(row => {
@@ -173,7 +171,7 @@ searchInput.addEventListener('keyup', () => {
     });
 });
 
-// *- LÓGICA DA API DE CONSULTA DE CNPJ -* 
+// LÓGICA DA API DE CONSULTA DE CNPJ 
 const consultarCnpjBtn = document.querySelector('#consultar-cnpj-btn');
 const cnpjInput = document.querySelector('#cnpj');
 
@@ -206,7 +204,7 @@ consultarCnpjBtn.addEventListener('click', async () => {
     const enderecoCompleto = `${data.logradouro}, ${data.numero} - ${data.bairro}, ${data.municipio} - ${data.uf}, CEP: ${data.cep}`;
     form.endereco.value = enderecoCompleto;
 
-    // Adiciona o resultante da inscrição estadual
+    // Adiciona o resultante da inscrição estadual, se houver
     form.inscricao_estadual.value = data.inscricao_estadual || '';
 
   } catch (error) {
@@ -222,7 +220,7 @@ consultarCnpjBtn.addEventListener('click', async () => {
 // Carrega os dados iniciais
 loadPartners();
 
-// --- LÓGICA DO BOTÃO "VOLTAR AO TOPO" ---
+// LÓGICA DO BOTÃO "VOLTAR AO TOPO"
 const backToTopButton = document.querySelector('#back-to-top');
 
 backToTopButton.addEventListener('click', (event) => {

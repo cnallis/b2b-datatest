@@ -5,12 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Sistema de Registro de Parceiros</title>
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-
+    <!--Abaixo segue o link que conecta este HTML com o BOOTSTRAP, fazendo desnecessário o uso de CSS no nosso projeto. Este cuida da aparência: cores, fontes, layout-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        
     </head>
     <body>
-
+        <!--Cabeçalho simples, sem uso de logins ou navbar-->
         <header class="p-3 text-bg-dark">
             <div class="container">
                 <div class="d-flex flex-wrap align-items-center justify-content-center">
@@ -18,15 +17,16 @@
                 </div>
             </div>
         </header>
-         <!-- Essa classe (exemplo)"mb-0" é indicação do Bootstrap, para margin-bottom: 0. Na verdade, a maioria dessas classes estão aqui por indicação do Bootstrap.-->
+        <!-- A maioria das classes e id's aqui utilizados já vêm nomeados pelo pŕopio estilo ofertado gratuitamente no Bootstrap. O que já facilita bastante nas conexões-->
+        <!--Classe como table-responsive é dada pelo Bootstrap como útil para telas menores-->
+        <!--A classe table, segue como estilo base; table-striped como efeito zebrado na tabela lá na consulta; table-hover dá um tchum no correr do mouse--> 
         <main class="container mt-4">
             <section class="mb-5">
-<!-- AQUI COMEÇA O CADASTRO DOS ASSOCIADOS-->                
+            <!-- AQUI COMEÇA O FORMULÁRIO PARA CADASTRO DOS PARCEIROS-->                
                 <h2>Cadastro de Parceiros</h2>
-                       <!-- O id, também segue como link do javascript, para com css e Bootstrap.-->      
                 <form id="register-form" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="nome" class="form-label">Nome Completo *</label>
+                        <label for="nome" class="form-label">Nome Completo ou Razão social *</label>
                         <input type="text" class="form-control" id="nome" name="nome" required>
                     </div>
 
@@ -44,7 +44,7 @@
                         <label for="endereco" class="form-label">Endereço *</label>
                         <input type="text" class="form-control" id="endereco" name="endereco" required>
                     </div>
-                    
+                    <!--Essa div abaixo conntém o campo para inclusão do CNPJ e também botão para consulta junto da BrasilAPI -->
                     <div class="mb-3">
                         <label for="cnpj" class="form-label">CNPJ *</label>
                         <div class="input-group">
@@ -57,7 +57,7 @@
                         <label for="inscricao_estadual" class="form-label">Inscrição Estadual *</label>
                         <input type="text" class="form-control" id="inscricao_estadual" name="inscricao_estadual">
                     </div>
-<!-- Aqui acima, essa segunda div do CNPJ vem para adicionar o botão de consulta externo-->
+
                     <div class="mb-3">
                         <label for="imagem" class="form-label">Foto do Parceiro *</label>
                         <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*" required>
@@ -72,15 +72,14 @@
             </section>
 
             <section>
+            <!-- AQUI COMEÇA O CAMPO PARA CONSULTA DOS PARCEIROS-->                
                 <div class="d-flex justify-content-between align-items-center">
-                    <h2>Lista de Parceiros</h2>
+                    <h2>Lista de parceiros cadastrados</h2>
                     <input type="text" id="search-input" class="form-control w-25" placeholder="Buscar parceiro...">
                 </div>
   
                 <div class="table-responsive mt-3">
                     <table class="table table-striped table-hover" id="partners-table">
-                        <!--Essa classe table-responsive é dada pelo Bootstrap como útil para telas menores-->
-                        <!--table, segue como estilo base; table-striped como efeito zebrado na tabela; table-hover dá um tchum no correr do mouse-->
                         <thead class="table-dark">
                             <tr>
                                 <th scope="col">ID</th>
@@ -105,65 +104,64 @@
                 </div>
             </section>
         </main>
+            <!-- AQUI COMEÇA A AŔEA DE EDIÇÃO DOS CADASTRADOS, ABRE COMO MODAL (POP-UP)-->
+            <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="editPartnerModalLabel">Editar Parceiro</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="edit-form">
+                                <input type="hidden" id="edit-id">
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-        <script type="module" src="script.js"></script>
-<!-- Aqui abaixo consta o anexo para edição dos dados já cadastrados, o MODAL (pop-up)-->
-        <div class="modal fade" id="editPartnerModal" tabindex="-1" aria-labelledby="editPartnerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="editPartnerModalLabel">Editar Parceiro</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit-form">
-                            <input type="hidden" id="edit-id">
-
-                            <div class="mb-3">
-                                <label for="edit-nome" class="form-label">Nome Completo *</label>
-                                <input type="text" class="form-control" id="edit-nome" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-email" class="form-label">E-mail *</label>
-                                <input type="email" class="form-control" id="edit-email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-telefone" class="form-label">Telefone *</label>
-                                <input type="text" class="form-control" id="edit-telefone" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-endereco" class="form-label">Endereço *</label>
-                                <input type="text" class="form-control" id="edit-endereco" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-cnpj" class="form-label">CNPJ *</label>
-                                <input type="text" class="form-control" id="edit-cnpj" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit_inscricao_estadual" class="form-label">Inscrição Estadual</label>
-                                <input type="text" class="form-control" id="edit_inscricao_estadual">
-                            </div>
-                            <div class="mb-3">
-                                <label for="edit-drive_url" class="form-label">Link da Pasta no Drive</label>
-                                <input type="url" class="form-control" id="edit_drive_url" placeholder="https://...">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" form="edit-form" class="btn btn-primary">Salvar Alterações</button>
+                                <div class="mb-3">
+                                    <label for="edit-nome" class="form-label">Nome Completo ou Razão social*</label>
+                                    <input type="text" class="form-control" id="edit-nome" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-email" class="form-label">E-mail *</label>
+                                    <input type="email" class="form-control" id="edit-email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-telefone" class="form-label">Telefone *</label>
+                                    <input type="text" class="form-control" id="edit-telefone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-endereco" class="form-label">Endereço *</label>
+                                    <input type="text" class="form-control" id="edit-endereco" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-cnpj" class="form-label">CNPJ *</label>
+                                    <input type="text" class="form-control" id="edit-cnpj" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_inscricao_estadual" class="form-label">Inscrição Estadual</label>
+                                    <input type="text" class="form-control" id="edit_inscricao_estadual">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-drive_url" class="form-label">Link da Pasta no Drive</label>
+                                    <input type="url" class="form-control" id="edit_drive_url" placeholder="https://...">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" form="edit-form" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+            <!--Abaixo segue outro link com o BOOTSTRAP, este cuida do comportamento interativo dos componentes-->    
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>     
+                <script type="module" src="script.js"></script>
     </body>
+    <!--Rodapé simples, com informação sobre a origem e um botão de rolagem suave para o topo-->
     <footer class="footer mt-5 py-3 bg-dark text-white">
         <div class="container d-flex justify-content-between align-items-center">
             <span>© 2025 - Projeto Integrador UNIVESP</span>
             <a href="#" id="back-to-top" class="btn btn-primary">↑ Voltar ao Topo</a>
         </div>
-    </footer>
+    </footer>    
 </html>
