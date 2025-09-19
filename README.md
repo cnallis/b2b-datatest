@@ -56,3 +56,9 @@ _endereco TEXT,_ -- Endereço completo do parceiro.
 _imagem_url TEXT,_ -- URL pública da imagem/logo do parceiro, armazenada no Supabase Storage.  
 _drive_url TEXT_ -- URL para a pasta de documentos do parceiro em um serviço externo (ex: Google Drive).  
 );  
+
+## 🚀 Acesso ao Projeto
+
+A aplicação está online e pode ser acessada e testada através do seguinte link:
+
+➡️ **[Link da aplicação no Netlify](https://harmonious-meerkat-f9ca0d.netlify.app/)**  
